@@ -15,7 +15,7 @@ class Server():
   def WaitForConnection(self):
       self.Client, self.Adr=(self.socket.accept())
       if self.connectionStatusLabel:
-        self.connectionString.config(text='Got a connection from: '+str(self.Client)+'.')
+        self.connectionStatusLabel.config(text='Got a connection from: '+str(self.Client)+'.')
 
 class App(Tk):
    def __init__(self):
