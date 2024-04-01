@@ -37,7 +37,7 @@ nb.add(frame1)
 nb.pack(padx = 0, pady = 0, expand = True)
 
 
-SERVER = Server()
+SERVER = Server(connectionStatusLabel=connectionStatus)
 
 thread = threading.Thread(target=SERVER.WaitForConnection)
 thread.daemon = True
