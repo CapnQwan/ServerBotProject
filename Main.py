@@ -3,31 +3,31 @@ from tkinter import ttk
 import socket
 import threading
 
+WINDOW_TABS = ['Main', 'Stats', 'Debug']
+
 class Server():
-  def __init__(self, Address=('192.168.0.134', 5000), MaxClient=1):
-      self.s = socket.socket()
-      self.s.bind(Address)
-      self.s.listen(MaxClient)
+  connectionStatusLabel = None
+  def __init__(self, Address=('', 5000), MaxClient=1, connectionStatusLabel=None):
+      self.socket = socket.socket()
+      self.socket.bind(Address)
+      self.socket.listen(MaxClient)
+      self.connectionStatusLabel = connectionStatusLabel
   def WaitForConnection(self):
-      print('Waiting for connection')
-      self.Client, self.Adr=(self.s.accept())
-      connectionString = 'Got a connection from: '+str(self.Client)+'.'
-      print('Got a connection from: '+str(self.Client)+'.')
+      self.Client, self.Adr=(self.socket.accept())
+      if self.connectionStatusLabel:
+        self.connectionString.config(text='Got a connection from: '+str(self.Client)+'.')
 
 class App(Tk):
    def __init__(self):
       super().__init__()
-
-WINDOW_TABS = ['Main', 'Stats', 'Debug']
-connectionString = 'waiting for connection...'
-
-app = App()
-nb = ttk.Notebook(app)
+      
+APP = App()
+nb = ttk.Notebook(APP)
 
 frame1 = Frame(nb, width=500, height=350)
 
-label1 = ttk.Label(frame1, text = connectionString)
-label1.pack(pady = 50, padx = 20)
+connectionStatus = ttk.Label(frame1, text = 'waiting for connection...')
+connectionStatus.pack(pady = 50, padx = 20)
 
 frame1.pack()
 
@@ -37,11 +37,11 @@ nb.add(frame1)
 nb.pack(padx = 0, pady = 0, expand = True)
 
 
-s = Server()
+SERVER = Server()
 
-thread = threading.Thread(target=s.WaitForConnection)
+thread = threading.Thread(target=SERVER.WaitForConnection)
 thread.daemon = True
 thread.start()
 
 
-app.mainloop()
+APP.mainloop()
