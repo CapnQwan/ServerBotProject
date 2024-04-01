@@ -4,7 +4,7 @@ import socket
 import threading
 
 class Server():
-  def __init__(self,Adress=('',5000),MaxClient=1):
+  def __init__(self, Adress=('192.168.0.134', 5000), MaxClient=1):
       self.s = socket.socket()
       self.s.bind(Adress)
       self.s.listen(MaxClient)
@@ -41,5 +41,6 @@ s = Server()
 thread = threading.Thread(target=s.WaitForConnection)
 thread.daemon = True
 thread.start()
+
 
 app.mainloop()
