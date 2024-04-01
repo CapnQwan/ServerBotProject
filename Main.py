@@ -4,14 +4,15 @@ import socket
 import threading
 
 class Server():
-  def __init__(self, Adress=('192.168.0.134', 5000), MaxClient=1):
+  def __init__(self, Address=('192.168.0.134', 5000), MaxClient=1):
       self.s = socket.socket()
-      self.s.bind(Adress)
+      self.s.bind(Address)
       self.s.listen(MaxClient)
   def WaitForConnection(self):
       print('Waiting for connection')
       self.Client, self.Adr=(self.s.accept())
       connectionString = 'Got a connection from: '+str(self.Client)+'.'
+      print('Got a connection from: '+str(self.Client)+'.')
 
 class App(Tk):
    def __init__(self):
