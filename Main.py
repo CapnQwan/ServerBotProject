@@ -1,25 +1,12 @@
 from tkinter import *
 from tkinter import ttk
-import socket
+from Server import Server
+from InstanceManager import InstanceManager
 import threading
 
-WINDOW_TABS = ['Main', 'Stats', 'Debug']
-
-class Server():
-  connectionStatusLabel = None
-  def __init__(self, Address=('', 5000), MaxClient=1, connectionStatusLabel=None):
-      self.socket = socket.socket()
-      self.socket.bind(Address)
-      self.socket.listen(MaxClient)
-      self.connectionStatusLabel = connectionStatusLabel
-  def WaitForConnection(self):
-      self.Client, self.Adr=(self.socket.accept())
-      if self.connectionStatusLabel:
-        self.connectionStatusLabel.config(text='Got a connection from: '+str(self.Client)+'.')
-
 class App(Tk):
-   def __init__(self):
-      super().__init__()
+  def __init__(self):
+    super().__init__()
       
 APP = App()
 nb = ttk.Notebook(APP)
@@ -38,10 +25,14 @@ nb.pack(padx = 0, pady = 0, expand = True)
 
 
 SERVER = Server(connectionStatusLabel=connectionStatus)
+SERVER.BindIntanceManager(InstanceManager())
 
 thread = threading.Thread(target=SERVER.WaitForConnection)
 thread.daemon = True
 thread.start()
 
+thread = threading.Thread(target=SERVER.HandleClient)
+thread.daemon = True
+thread.start()
 
 APP.mainloop()
