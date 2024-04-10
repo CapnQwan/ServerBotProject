@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import ttk
 from Server import Server
 from InstanceManager import InstanceManager
-import threading
 
 class App(Tk):
   def __init__(self):
@@ -26,13 +25,5 @@ nb.pack(padx = 0, pady = 0, expand = True)
 
 SERVER = Server(connectionStatusLabel=connectionStatus)
 SERVER.BindIntanceManager(InstanceManager())
-
-thread = threading.Thread(target=SERVER.WaitForConnection)
-thread.daemon = True
-thread.start()
-
-thread = threading.Thread(target=SERVER.HandleClient)
-thread.daemon = True
-thread.start()
 
 APP.mainloop()

@@ -1,4 +1,5 @@
 import socket
+import threading
 
 class Server():
   ConnectionStatus = False
@@ -9,12 +10,17 @@ class Server():
     self.socket.bind(Address)
     self.socket.listen(MaxClient)
     self.connectionStatusLabel = connectionStatusLabel
+
+    threading.Thread(target=self.WaitForConnection, daemon=True).start()
+  
   def WaitForConnection(self):
     while True:
       self.Client, self.Adr=(self.socket.accept())
       if self.connectionStatusLabel:
         self.connectionStatusLabel.config(text='Got a connection from: '+str(self.Client)+'.')
         self.ConnectionStatus = True
+        threading.Thread(target=self.HandleClient, daemon=True).start()
+
   def HandleClient(self):
     while True:
       # Handle client's requests here
@@ -33,5 +39,6 @@ class Server():
         if self.connectionStatusLabel:
           self.connectionStatusLabel.config(text='Client disconnected.')
         break
+
   def BindIntanceManager(self, InstanceManager):
     self.InstanceManager = InstanceManager
